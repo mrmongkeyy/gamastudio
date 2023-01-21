@@ -45,6 +45,7 @@
 }
 .active{
 	background:#00fa9a;
+	color:black;
 }
 body{
 	padding:0;
