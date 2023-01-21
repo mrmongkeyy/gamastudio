@@ -120,12 +120,13 @@ main{
 	color:white;
 	margin:0 2%;
 	margin-top:10px;
-	border-radius:0 0 10px 10px;
+	border-radius:10px;
 	cursor:pointer;
 }
 #musics #musicsitem div{
 	width:96%;
 	padding:2%;
+	border-radius:10px;
 }
 #musics #musicsitem div audio{
 	width:100%;
