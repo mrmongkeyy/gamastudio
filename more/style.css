@@ -1,0 +1,159 @@
+.square div{
+	width:96%;
+	color:black;
+	padding:2%;
+}
+.bound {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(28, 49, 94, 0.5);
+  height: 100%;
+}
+.container{
+	width:96%;
+	margin:2%;
+}
+.fullheight{
+	height:96%;
+}
+.bold{
+	font-weight:bold;
+}
+.buttons{
+	width:100%;
+}
+.buttons div{
+	float:left;
+	width:100%;
+}
+.buttons div span{
+	background:yellow;
+	color:black;
+	padding:10px;
+	cursor:pointer;
+}
+.fullwidth{
+	width:100%:
+}
+.righttextalign{
+	text-align:right;
+}
+.played{
+	color:green;
+}
+.active{
+	background:#00fa9a;
+}
+body{
+	padding:0;
+	margin:0;
+	font-weight:bold;
+	user-select:none;
+	font-family:monospace;
+	font-size:15px;
+}
+main{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	bottom:0;
+}
+
+#leftside{
+	width:80%;
+	height:100%;
+	background:#d8dee9;
+	float:left;
+}
+#rightside{
+	width:20%;
+	background:#81a1c1;
+	height:100%;
+	float:left;
+}
+#musics{
+	height:93%;
+	overflow:auto;
+}
+#rightside #top{
+	width:90%;
+	padding:5%;
+	background:#5e81ac;
+	float:left;
+}
+#rightside #top div{
+	float:left;
+	width:50%;
+}
+
+#addbutton{
+	text-align:right;
+}
+#addbutton span{
+	background:#434c5e;
+	color:white;
+	padding:5px;
+	cursor:pointer;
+}
+#titleApp{
+	background:white;
+	padding:5px;
+}
+#newfileconfig{
+	position:absolute;
+	background:white;
+	top:0;
+	left:0;
+	margin-left:25%;
+	margin-top:12%;
+	width:50%;
+}
+#musics #musicsitem{
+	width:25.3%;
+	float:left;
+	padding:0 2%;
+	background:#5e81ac;
+	color:white;
+	margin:0 2%;
+	margin-top:10px;
+	border-radius:0 0 10px 10px;
+	cursor:pointer;
+}
+#musics #musicsitem div{
+	width:96%;
+	padding:2%;
+}
+#musics #musicsitem div audio{
+	width:100%;
+}
+#properties{
+	float:left;
+	width:100%;
+}
+#properties div{
+	padding:2%;
+	width:96%;
+	background:white;
+}
+#copy{
+	position:absolute;
+	bottom:0;
+	padding:5px;
+	text-align:center;
+	background:#5e81ac;
+	width:-moz-available;
+	color:white;
+}
+#inputfilespan{
+	width:100%;
+	padding:2%;
+	display:inline-block;
+}
+
+
+
+
+
