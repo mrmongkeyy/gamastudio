@@ -129,6 +129,7 @@ main{
 }
 #musics #musicsitem div audio{
 	width:100%;
+	outline:none;
 }
 #properties{
 	float:left;
