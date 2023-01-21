@@ -99,7 +99,7 @@ const gama = {
 		fs.onload = function(){
 			const div = help.makeElement('div');
 			div.id = 'musicsitem';
-			div.draggable = true;
+			//div.draggable = true;
 			div.innerHTML = templ.processfiles({
 				id:gama.files[gama.filereadylen].id,
 				kev:gama.files[gama.filereadylen].kev,
