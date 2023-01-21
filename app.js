@@ -23,6 +23,13 @@ const route = [
 		callback(req,res){
 			res.sendFile('/more/style.css',{root:path.join(__dirname)},function(err){if(err)console.log(err)});
 		}
+	},
+	{
+		methode:'get',
+		address:'/tabicon',
+		callback(req,res){
+			res.sendFile('/more/media/icons/icons.png',{root:path.join(__dirname)},function(err){if(err)console.log(err)})
+		}
 	}
 ]
 

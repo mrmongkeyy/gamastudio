@@ -4,7 +4,7 @@ const templ = {
 			<div class='container fullheight'>
 				<div class=container>
 					<div>File Selected:</div>
-					<div class=bold>${file.name}</div>
+					<div class=bold>${file.name||'Undefined'}</div>
 				</div>
 				<div class=container>
 					<div>ID</div>
