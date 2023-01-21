@@ -107,9 +107,18 @@ const gama = {
 				type:gama.files[gama.filereadylen].file.type,
 			});
 			const kev = gama.files[gama.filereadylen].kev;
-			div.onclick = function(){gama.recentlyactive=[kev,this];gama.showproperties()};
+			div.onclick = function(){
+				gama.setRecentlyFlag();
+				gama.recentlyactive=[kev,this];
+				gama.setRecentlyFlag();
+				gama.showproperties();
+			};
 			gama.inputs[kev] = div;
+			if(gama.recentlyactive){
+				gama.setRecentlyFlag();
+			}
 			gama.recentlyactive = [kev,div];
+			gama.setRecentlyFlag();
 			gama.showproperties();
 			help.get(document,'#musics').appendChild(div);
 			gama.filereadylen++;
@@ -171,7 +180,9 @@ const gama = {
 					gama.inputs[ev.key].find('audio').pause();
 					gama.inputs[ev.key].findall('div')[0].classList.remove('active');
 				}
+				gama.setRecentlyFlag();
 				gama.recentlyactive = [ev.key,gama.inputs[ev.key]];
+				gama.setRecentlyFlag();
 				gama.showproperties();
 			}
 		})
@@ -193,6 +204,12 @@ const gama = {
 		div.id = 'propertiesitem';
 		help.get(document,'#properties').innerHTML = '';
 		help.get(document,'#properties').appendChild(div);
+	},
+	setRecentlyFlag(){
+		if(!gama.recentlyactive)return
+		let background = gama.recentlyactive[1].style.background;
+		background = (background==='orange')?'rgb(94, 129, 172)':'orange';
+		gama.recentlyactive[1].style.background = background;
 	}
 };
 
