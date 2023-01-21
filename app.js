@@ -27,7 +27,7 @@ const route = [
 ]
 
 for(let i of route){
-	app[i.methode](i.address,i.callback(req,res));
+	app[i.methode](i.address,(req,res)=>{i.callback(req,res)});
 }
 
 app.listen(process.env.PORT||3000,()=>console.log('am lived!'));
