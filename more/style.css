@@ -90,10 +90,10 @@ main{
 	width:50%;
 }
 
-#addbutton{
+#buttons{
 	text-align:right;
 }
-#addbutton span{
+#buttons span{
 	background:#434c5e;
 	color:white;
 	padding:5px;
@@ -120,13 +120,11 @@ main{
 	color:white;
 	margin:0 2%;
 	margin-top:10px;
-	border-radius:10px;
 	cursor:pointer;
 }
 #musics #musicsitem div{
 	width:96%;
 	padding:2%;
-	border-radius:10px;
 }
 #musics #musicsitem div audio{
 	width:100%;

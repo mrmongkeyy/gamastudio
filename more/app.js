@@ -1,21 +1,21 @@
 const templ = {
-	newfileconfig(file){
+	newfileconfig(config){
 		return `
 			<div class='container fullheight'>
 				<div class=container>
 					<div>File Selected:</div>
-					<div class=bold>${file.name||'Undefined'}</div>
+					<div class=bold>${config.file.name||'Undefined'}</div>
 				</div>
 				<div class=container>
 					<div>ID</div>
 					<div>
-						<input id=id placeholder=typetheid required>
+						<input id=id placeholder=typetheid required value="${(config.more[config.file.name])?config.more[config.file.name].id:''}">
 					</div>
 				</div>
 				<div class=container>
 					<div>Key Event</div>
 					<div>
-						<input id=kev placeholder=typethekey>
+						<input id=kev placeholder=typethekey value="${(config.more[config.file.name])?config.more[config.file.name].kev:''}">
 					</div>
 				</div>
 				<div class=container>
@@ -46,6 +46,12 @@ const templ = {
 			<div>Reset "SHIFT+r"</div>
 			<div>Muted: ${config.muted} "SHIFT+m" change!</div>
 			<div>Delete "SHIFT+d"</div>
+			<div>ResetAll "Alt+r"</div>
+			<div>DeleteAll "Alt+q"</div>
+			<div>ResetAll&&Pause "Alt+r+1"</div>
+			<div>PauseAll "Alt+p"</div>
+			<div>AddFile "Shift+a"</div>
+			<div>DeleteSaveData "Shift+s"</div>
 		`;
 	}
 }
@@ -57,13 +63,21 @@ const gama = {
 		this.fileReader = help.get(document,'#fileInput');
 		this.buttonEvent();
 		this.keyEventSetup();
+		this.loadData();
 	},
 	fileindex:0,
 	addfiles(){
 		gama.newfileconfig(gama.fileReader.files[gama.fileindex]);
 	},
+	fileData:{},
+	saveData(){
+		help.storage({dbName:'gamadata',value:JSON.stringify(gama.fileData)},true);
+	},
+	loadData(){
+		this.fileData = help.storage({dbName:'gamadata'},false)||{};
+	},
 	buttonEvent(){
-		help.get(document,'#addbutton span').onclick = this.addfiles;
+		help.get(document,'#buttons #add').onclick = this.addfiles;
 	},
 	files:[],
 	newfileconfig(file){
@@ -71,16 +85,12 @@ const gama = {
 		const bound = help.makeBound('div');
 		const div = help.makeElement('div');
 		div.id = 'newfileconfig';
-		div.innerHTML = templ.newfileconfig(file);
-		bound.callback = function(){div.remove()}
+		div.innerHTML = templ.newfileconfig({file,more:gama.fileData});
+		bound.callback = function(){div.remove();gama.ignorestate=false}
 		div.find('#nextbutton').onclick = function(){
-			gama.files.push((function(){
-				return {
-					file,
-					id:div.find('#id').value,
-					kev:div.find('#kev').value
-				}
-			})());
+			const kev = div.find('#kev').value,id = div.find('#id').value; 
+			gama.fileData[file.name] = {kev,id};
+			gama.files.push({file,id,kev});
 			gama.fileindex++;
 			if(gama.fileindex<gama.fileReader.files.length)gama.addfiles();
 			else{
@@ -106,6 +116,15 @@ const gama = {
 				src:fs.result,
 				type:gama.files[gama.filereadylen].file.type,
 			});
+			div.find('audio').onpause = function(){
+				div.find('div').classList.remove('active');
+			}
+			div.find('audio').onended = function(){
+				div.find('div').classList.remove('active');
+			}
+			div.find('audio').onplay = function(){
+				div.find('div').classList.add('active');
+			}
 			const kev = gama.files[gama.filereadylen].kev;
 			div.onclick = function(){
 				gama.setRecentlyFlag();
@@ -123,36 +142,35 @@ const gama = {
 			help.get(document,'#musics').appendChild(div);
 			gama.filereadylen++;
 			if(gama.filereadylen<gama.files.length)gama.processfiles();
+			else gama.saveData();
 		}
 		fs.readAsDataURL(gama.files[gama.filereadylen].file);
 	},
 	inputs:{
-		L(){
-			if(gama.ignorestate)return
+		ShiftL(){
 			gama.recentlyactive[1].find('audio').loop = !gama.recentlyactive[1].find('audio').loop;
 			gama.showproperties();
 		},
 		ArrowUp(){
-			if(gama.ignorestate || gama.recentlyactive[1].find('audio').volume===1)return
-			gama.recentlyactive[1].find('audio').volume += 0.1;
-			gama.showproperties();
+			if(gama.recentlyactive[1].find('audio').volume<0.9){
+			    gama.recentlyactive[1].find('audio').volume += 0.1;
+			    gama.showproperties();
+			}
 		},
 		ArrowDown(){
-			if(gama.ignorestate || gama.recentlyactive[1].find('audio').volume<=0.2)return
-			gama.recentlyactive[1].find('audio').volume -= 0.1;
-			gama.showproperties();
+			if(gama.recentlyactive[1].find('audio').volume>0.2){
+			    gama.recentlyactive[1].find('audio').volume -= 0.1;
+			    gama.showproperties();
+			}
 		},
-		R(){
-			//console.log(gama.recentlyactive.find('audio').currentTime);
-			if(gama.ignorestate)return
+		ShiftR(){
 			gama.recentlyactive[1].find('audio').currentTime = 0;
 		},
-		M(){
-			if(gama.ignorestate)return
+		ShiftM(){
 			gama.recentlyactive[1].find('audio').muted = !gama.recentlyactive[1].find('audio').muted;
 			gama.showproperties();
 		},
-		D(){
+		ShiftD(){
 			gama.recentlyactive[1].remove();
 			const newbucketfiles = [];
 			gama.files.forEach((file)=>{
@@ -162,28 +180,58 @@ const gama = {
 			gama.recentlyactive = null;
 			gama.files = newbucketfiles;
 			help.get(document,'#properties').innerHTML = '';
+		},
+		Altr(){
+			help.getall(document,'#musicsitem').forEach((div)=>{
+				div.find('audio').currentTime = 0;
+			});
+		},
+		'1Altr'(){
+			help.getall(document,'#musicsitem').forEach((div)=>{
+				div.find('audio').currentTime = 0;
+				div.find('audio').pause();
+			});
+		},
+		Altq(){
+			location.reload();
+		},
+		Altp(){
+			console.log('pausing...');
+			help.getall(document,'#musicsitem').forEach((div)=>{
+				if(!div.find('audio').paused)div.find('audio').pause();	
+			});
+		},
+		ShiftA(){
+			console.log('called');
+			gama.addfiles();	
+		},
+		ShiftS(){
+			delete localStorage.gamadata;
+			gama.loadData();	
 		}
 	},
+	keyBuckets:{},
 	keyEventSetup(){
 		window.addEventListener('keydown',(ev)=>{
-			//console.log(ev.key);
-			if(gama.inputs[ev.key] && typeof gama.inputs[ev.key] === 'function'){
-				gama.inputs[ev.key]();
-				return
-			}
-			if(gama.inputs[ev.key] && !gama.ignorestate){
-				if(gama.inputs[ev.key].find('audio').paused){
-					gama.inputs[ev.key].find('audio').play();
-					gama.inputs[ev.key].findall('div')[0].classList.add('active');
+			if(!gama.keyBuckets[ev.key])gama.keyBuckets[ev.key]=null;			
+		})
+		window.addEventListener('keyup',(ev)=>{
+			const combinedKeys = this.getCombinedKeys();
+			this.keyBuckets = {};
+			if(gama.inputs[combinedKeys]){
+				if(typeof gama.inputs[combinedKeys] === 'function' && (gama.recentlyactive||combinedKeys==='ShiftA') && !gama.ignorestate)gama.inputs[combinedKeys]();
+				if(typeof gama.inputs[combinedKeys] != 'function' && !gama.ignorestate){
+					if(gama.inputs[combinedKeys].find('audio').paused){
+						gama.intervalPlay(gama.inputs[combinedKeys].find('audio'),50);
+					}
+					else{
+						gama.intervalPause(gama.inputs[combinedKeys].find('audio'),50);
+					}
+					gama.setRecentlyFlag();
+					gama.recentlyactive = [ev.key,gama.inputs[combinedKeys]];
+					gama.setRecentlyFlag();
+					gama.showproperties();
 				}
-				else{
-					gama.inputs[ev.key].find('audio').pause();
-					gama.inputs[ev.key].findall('div')[0].classList.remove('active');
-				}
-				gama.setRecentlyFlag();
-				gama.recentlyactive = [ev.key,gama.inputs[ev.key]];
-				gama.setRecentlyFlag();
-				gama.showproperties();
 			}
 		})
 	},
@@ -210,6 +258,39 @@ const gama = {
 		let background = gama.recentlyactive[1].style.background;
 		background = (background==='orange')?'rgb(94, 129, 172)':'orange';
 		gama.recentlyactive[1].style.background = background;
+	},
+	getCombinedKeys(){
+		let combinedKeys = '';
+		for(let i in gama.keyBuckets){
+			combinedKeys+=i;	
+		}
+		return combinedKeys;
+	},
+	intervalPause(audio,time){
+		let prevVolume = audio.volume;
+		let interval = setInterval(function(){
+			if(audio.volume>0.2){
+				audio.volume-=0.1;
+				gama.showproperties();
+			}
+			else{
+				clearInterval(interval);
+				audio.pause();
+				audio.volume = prevVolume;
+			}
+		},time||100);
+	},
+	intervalPlay(audio,time){
+		let prevVolume = (audio.volume===1)?0.9:audio.volume;
+		audio.volume = 0;
+		audio.play();
+		let interval = setInterval(function(){
+			if(audio.volume<prevVolume){
+				audio.volume += 0.1;
+				gama.showproperties();
+			}
+			else clearInterval(interval);
+		},time||100)	
 	}
 };
 

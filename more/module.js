@@ -41,8 +41,9 @@ const help = {
 				const value = this.value;
 				this.value = '';
 				return value;
-			},delete(){
-				console.log(this);
+			},
+			delete(){
+				//console.log(this);
 				this.remove();
 			},
 			injected:true
@@ -94,7 +95,7 @@ const help = {
 			localStorage[config.dbName] = config.value;
 			return true;
 		}
-		return JSON.parse(localStorage[config.dbName]);
+		if(localStorage[config.dbName])return JSON.parse(localStorage[config.dbName]);
 	},
 	net:{
 		reQ:{
@@ -114,10 +115,14 @@ const help = {
 				this.x.send(config.data);
 			}
 		}
+	},
+	forEach(type,obj,callback){
+		if(!type||!obj||!callback)return false;
+		if(type==='array' || type==='string'){
+			for(let i of obj)callback(i)
+		}else if(type==='obj'){
+			for(let i in obj)callback(i)
+		}
 	}
 }
 const req = help.net.reQ;
-
-
-
-
