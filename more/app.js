@@ -1,69 +1,42 @@
-const templ = {
-	newfileconfig(config){
-		return `
-			<div class='container fullheight'>
-				<div class=container>
-					<div>File Selected:</div>
-					<div class=bold>${config.file.name||'Undefined'}</div>
-				</div>
-				<div class=container>
-					<div>ID</div>
-					<div>
-						<input id=id placeholder=typetheid required value="${(config.more[config.file.name])?config.more[config.file.name].id:''}">
-					</div>
-				</div>
-				<div class=container>
-					<div>Key Event</div>
-					<div>
-						<input id=kev placeholder=typethekey value="${(config.more[config.file.name])?config.more[config.file.name].kev:''}">
-					</div>
-				</div>
-				<div class=container>
-					<div class=buttons>
-						<div class='fullwidth righttextalign'>
-							<span id=nextbutton>Next</span>	
-						</div>
-					</div>
-				</div>
-			</div>
-		`;
-	},
-	processfiles(config){
-		return `
-			<div>
-				(${config.kev}) ${config.id} 
-			</div>
-			<div>
-				<audio src=${config.src} type=${config.type} controls></audio>
-			</div>
-		`;
-	},
-	showproperties(config){
-		return `
-			<div>ID: ${config.id}</div>
-			<div>Loop: ${config.loop} "SHIFT+l" change!</div>
-			<div>Volume: ${String(config.volume).slice(0,3)} "arrow keys" change!</div>
-			<div>Reset "SHIFT+r"</div>
-			<div>Muted: ${config.muted} "SHIFT+m" change!</div>
-			<div>Delete "SHIFT+d"</div>
-			<div>ResetAll "Alt+r"</div>
-			<div>DeleteAll "Alt+q"</div>
-			<div>ResetAll&&Pause "Alt+r+1"</div>
-			<div>PauseAll "Alt+p"</div>
-			<div>AddFile "Shift+a"</div>
-			<div>DeleteSaveData "Shift+s"</div>
-		`;
-	}
-}
-
-
 const gama = {
 	settings:{},
 	init(){
+		this.checkingL();
 		this.fileReader = help.get(document,'#fileInput');
 		this.buttonEvent();
 		this.keyEventSetup();
 		this.loadData();
+	},
+	checkingL(){
+		const pleaseBuySystem = function(){
+			const bound = help.makeBound('div');
+			const pop = help.makeElement('div');
+			pop.innerHTML = templ.pleaseBuyPop();
+			pop.id = 'pleaseBuyPop';
+			bound.appendChild(pop);
+			bound.onclick = null;
+			const buttons = {
+				ok(){
+					bound.remove();
+					setTimeout(function(){
+						gama.inputs.ShiftS();
+						location.reload();
+					},600000);
+				},
+				buyit(button){
+					pop.find('#msg').innerHTML = templ.wannaBuy();
+					button.parentNode.remove()
+				}
+			};
+			pop.findall('#buttons div span').forEach((button)=>{
+				button.onclick = function(){
+					buttons[this.id](this);	
+				}
+			});
+			help.get(document,'main').appendChild(bound);
+		}
+		const xdata = help.storage({dbName:'buyedgamadata'},false);
+		if(!xdata)pleaseBuySystem();
 	},
 	fileindex:0,
 	addfiles(){
@@ -109,7 +82,6 @@ const gama = {
 		fs.onload = function(){
 			const div = help.makeElement('div');
 			div.id = 'musicsitem';
-			//div.draggable = true;
 			div.innerHTML = templ.processfiles({
 				id:gama.files[gama.filereadylen].id,
 				kev:gama.files[gama.filereadylen].kev,
@@ -153,8 +125,8 @@ const gama = {
 		},
 		ArrowUp(){
 			if(gama.recentlyactive[1].find('audio').volume<0.9){
-			    gama.recentlyactive[1].find('audio').volume += 0.1;
-			    gama.showproperties();
+			  gama.recentlyactive[1].find('audio').volume += 0.1;
+			  gama.showproperties();
 			}
 		},
 		ArrowDown(){
@@ -202,7 +174,6 @@ const gama = {
 			});
 		},
 		ShiftA(){
-			console.log('called');
 			gama.addfiles();	
 		},
 		ShiftS(){
@@ -295,6 +266,3 @@ const gama = {
 };
 
 gama.init();
-
-
-

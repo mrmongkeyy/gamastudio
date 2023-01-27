@@ -153,8 +153,18 @@ main{
 	padding:2%;
 	display:inline-block;
 }
-
-
-
+#pleaseBuyPop{
+	display:flex;
+	justify-content:center;
+	align-items:center;	
+}
+#pleaseBuyPop #box{
+	width:50%;
+	background:white;
+	padding:10px;	
+}
+#pleaseBuyPop #box #buttons div{
+	margin-top:20px;	
+}
 
 

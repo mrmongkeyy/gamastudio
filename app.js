@@ -14,7 +14,7 @@ const route = [
 		methode:'get',
 		address:'/scripts',
 		callback(req,res){
-			res.sendFile(`/more/${req.query.fn}.js`,{root:path.join(__dirname)},function(err){if(err)console.log(err)});
+			res.sendFile(`/more/release.${req.query.fn}.js`,{root:path.join(__dirname)},function(err){if(err)console.log(err)});
 		}
 	},
 	{
