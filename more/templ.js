@@ -69,5 +69,5 @@ const templ = {
 			</div>
 		`;	
 	},
-	wannaBuy(){return `Please contact our developer. Its Mrmongkeyy shit!`}
+	wannaBuy(){return `Please contact my developer. Its Mrmongkeyy shit!`}
 }

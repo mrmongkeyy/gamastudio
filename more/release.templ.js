@@ -1,19 +1,19 @@
-const templ={newfileconfig(i){return`
+const templ={newfileconfig(config){return`
 			<div class='container fullheight'>
 				<div class=container>
 					<div>File Selected:</div>
-					<div class=bold>${i.file.name||"Undefined"}</div>
+					<div class=bold>${config.file.name||"Undefined"}</div>
 				</div>
 				<div class=container>
 					<div>ID</div>
 					<div>
-						<input id=id placeholder=typetheid required value="${i.more[i.file.name]?i.more[i.file.name].id:""}">
+						<input id=id placeholder=typetheid required value="${config.more[config.file.name]?config.more[config.file.name].id:""}">
 					</div>
 				</div>
 				<div class=container>
 					<div>Key Event</div>
 					<div>
-						<input id=kev placeholder=typethekey value="${i.more[i.file.name]?i.more[i.file.name].kev:""}">
+						<input id=kev placeholder=typethekey value="${config.more[config.file.name]?config.more[config.file.name].kev:""}">
 					</div>
 				</div>
 				<div class=container>
@@ -24,19 +24,19 @@ const templ={newfileconfig(i){return`
 					</div>
 				</div>
 			</div>
-		`},processfiles(i){return`
+		`},processfiles(config){return`
 			<div>
-				(${i.kev}) ${i.id} 
+				(${config.kev}) ${config.id} 
 			</div>
 			<div>
-				<audio src=${i.src} type=${i.type} controls></audio>
+				<audio src=${config.src} type=${config.type} controls></audio>
 			</div>
-		`},showproperties(i){return`
-			<div>ID: ${i.id}</div>
-			<div>Loop: ${i.loop} "SHIFT+l" change!</div>
-			<div>Volume: ${String(i.volume).slice(0,3)} "arrow keys" change!</div>
+		`},showproperties(config){return`
+			<div>ID: ${config.id}</div>
+			<div>Loop: ${config.loop} "SHIFT+l" change!</div>
+			<div>Volume: ${String(config.volume).slice(0,3)} "arrow keys" change!</div>
 			<div>Reset "SHIFT+r"</div>
-			<div>Muted: ${i.muted} "SHIFT+m" change!</div>
+			<div>Muted: ${config.muted} "SHIFT+m" change!</div>
 			<div>Delete "SHIFT+d"</div>
 			<div>ResetAll "Alt+r"</div>
 			<div>DeleteAll "Alt+q"</div>
@@ -56,4 +56,4 @@ const templ={newfileconfig(i){return`
 					<div><span id=buyit>Get full version</span></div>
 				</div>
 			</div>
-		`},wannaBuy(){return"Please contact our developer. Its Mrmongkeyy shit!"}};
+		`},wannaBuy(){return"Please contact my developer. Its Mrmongkeyy shit!"}};
