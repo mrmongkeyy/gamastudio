@@ -58,9 +58,7 @@ const templ = {
 		return `
 			<div id=box>
 				<div id=msg>
-					Helloworld, this is Mrmongkeyy. You are using the trial version of this app, you can use the app 10 minutes only
-					and the app will reload and delete all of your works, but its ok you can use it again, but it will start from 0.
-					Enjoy the app!
+					Hello world, this is Mrmongkeyy. You are using the trial version of this app, which allows you to use the app for up to 10 minutes before it reloads and deletes all of your work. However, you can use it again afterwards, though it will start from scratch. Enjoy the app!
 				</div>
 				<div id=buttons>
 					<div><span id=ok>Ok</span></div>
